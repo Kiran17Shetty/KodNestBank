@@ -34,6 +34,7 @@ export default function Dashboard() {
         try {
             await api.post('/api/logout');
         } catch { /* ignore */ }
+        localStorage.removeItem('kodbank_token');
         setAuth(null);
         navigate('/login');
     };

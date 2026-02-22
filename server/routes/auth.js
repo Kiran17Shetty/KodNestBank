@@ -7,6 +7,20 @@ const { pool } = require('../db');
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret';
 
+// Helper: Extract token from cookie OR Authorization header
+function extractToken(req) {
+    // Try cookie first
+    if (req.cookies && req.cookies.token) {
+        return req.cookies.token;
+    }
+    // Then try Authorization header
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        return authHeader.split(' ')[1];
+    }
+    return null;
+}
+
 // POST /api/register
 router.post('/register', async (req, res) => {
     try {
@@ -74,16 +88,23 @@ router.post('/login', async (req, res) => {
         );
 
         // Save token to UserToken table
-        const expiry = new Date(Date.now() + 3600000); // 1 hour
+        const expiry = new Date(Date.now() + 3600000);
         await pool.query(
             'INSERT INTO UserToken (token, uid, expiry) VALUES (?, ?, ?)',
             [token, user.uid, expiry]
         );
 
-        // Set HttpOnly cookie
-        res.cookie('token', token, req.app.get('cookieOptions'));
+        // Set cookie (works for same-domain / local dev)
+        try {
+            res.cookie('token', token, req.app.get('cookieOptions'));
+        } catch (_) { /* ignore cookie errors */ }
 
-        res.status(200).json({ message: 'Login successful', username: user.username });
+        // ALSO return token in response body (works everywhere, including cross-domain)
+        res.status(200).json({
+            message: 'Login successful',
+            username: user.username,
+            token: token,
+        });
     } catch (err) {
         console.error('Login error:', err);
         res.status(500).json({ message: 'Internal server error' });
@@ -93,7 +114,7 @@ router.post('/login', async (req, res) => {
 // GET /api/getBalance
 router.get('/getBalance', async (req, res) => {
     try {
-        const token = req.cookies.token;
+        const token = extractToken(req);
 
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized' });
@@ -126,7 +147,7 @@ router.get('/getBalance', async (req, res) => {
 // POST /api/logout
 router.post('/logout', async (req, res) => {
     try {
-        const token = req.cookies.token;
+        const token = extractToken(req);
 
         if (token) {
             await pool.query('DELETE FROM UserToken WHERE token = ?', [token]);
@@ -143,7 +164,7 @@ router.post('/logout', async (req, res) => {
 // GET /api/me
 router.get('/me', async (req, res) => {
     try {
-        const token = req.cookies.token;
+        const token = extractToken(req);
 
         if (!token) {
             return res.status(401).json({ message: 'Unauthorized' });
@@ -159,7 +180,6 @@ router.get('/me', async (req, res) => {
         const username = decoded.sub;
         const role = decoded.role;
 
-        // Get uid
         const [users] = await pool.query(
             'SELECT uid FROM KodUser WHERE username = ?',
             [username]

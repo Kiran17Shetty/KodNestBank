@@ -23,6 +23,10 @@ export default function Login() {
         setLoading(true);
         try {
             const res = await api.post('/api/login', { username, password });
+            // Save token to localStorage for Authorization header
+            if (res.data.token) {
+                localStorage.setItem('kodbank_token', res.data.token);
+            }
             setAuth({ username: res.data.username, role: 'Customer', uid: '' });
             navigate('/dashboard');
         } catch (err: any) {
