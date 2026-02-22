@@ -8,14 +8,23 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     credentials: true,
 }));
 app.use(express.json());
 app.use(cookieParser());
+
+// Make cookie settings available to routes
+app.set('cookieOptions', {
+    httpOnly: true,
+    maxAge: 3600000,
+    sameSite: isProduction ? 'none' : 'lax',
+    secure: isProduction,
+});
 
 // Routes
 app.use('/api', authRoutes);

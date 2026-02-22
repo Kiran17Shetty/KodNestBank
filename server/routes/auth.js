@@ -81,12 +81,7 @@ router.post('/login', async (req, res) => {
         );
 
         // Set HttpOnly cookie
-        res.cookie('token', token, {
-            httpOnly: true,
-            maxAge: 3600000,
-            sameSite: 'lax',
-            secure: false,
-        });
+        res.cookie('token', token, req.app.get('cookieOptions'));
 
         res.status(200).json({ message: 'Login successful', username: user.username });
     } catch (err) {
