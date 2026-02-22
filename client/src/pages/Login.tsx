@@ -14,8 +14,8 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (e?: FormEvent) => {
+        e?.preventDefault();
         if (!username.trim() || !password.trim()) {
             addToast('Please fill in all fields', 'error');
             return;
@@ -35,9 +35,9 @@ export default function Login() {
 
     return (
         <div
+            className="page-bg"
             style={{
                 minHeight: '100vh',
-                background: 'var(--bg-primary)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -51,57 +51,81 @@ export default function Login() {
             <div className="floating-orb orb-1" />
             <div className="floating-orb orb-2" />
             <div className="floating-orb orb-3" />
+            <div className="floating-orb orb-4" />
 
-            <div style={{ width: '100%', maxWidth: 780, padding: '0 20px', position: 'relative', zIndex: 1 }}>
+            <div style={{ width: '100%', maxWidth: 820, padding: '0 20px', position: 'relative', zIndex: 1 }}>
                 {/* Main Card */}
-                <div
-                    className="glass-card fade-in"
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: '28% 44% 28%',
-                        overflow: 'hidden',
-                    }}
-                >
-                    {/* LEFT SECTION */}
+                <div className="glass-card fade-in" style={{ display: 'grid', gridTemplateColumns: '30% 42% 28%', overflow: 'hidden' }}>
+
+                    {/* LEFT SECTION — Branding */}
                     <div
                         style={{
                             borderRight: '1px solid var(--border-subtle)',
-                            padding: '36px 28px',
+                            padding: '36px 26px',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
+                            background: 'linear-gradient(180deg, rgba(59,130,246,0.04) 0%, transparent 60%)',
                         }}
                     >
                         <div>
-                            <h2 style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: 20 }}>
-                                Welcome to KodBank
+                            <h2 style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: 20, lineHeight: 1.3 }}>
+                                Welcome to<br />
+                                <span style={{ background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                                    KodBank
+                                </span>
                             </h2>
-                            <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 4 }}>
-                                Sign in to continue
+                            <p style={{ color: 'var(--text-secondary)', fontSize: 13, marginTop: 6 }}>
+                                Sign in to your account
                             </p>
-                            <div style={{ height: 1, background: 'var(--border-subtle)', margin: '16px 0' }} />
+                            <div style={{ height: 1, background: 'var(--border-subtle)', margin: '18px 0' }} />
                         </div>
 
-                        <div>
-                            <span style={{ color: 'var(--text-primary)', fontWeight: 800, fontSize: 18 }}>Kod</span>
-                            <span style={{ color: 'var(--accent-green)', fontWeight: 800, fontSize: 18 }}>Bank</span>
+                        {/* Logo */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                            <div
+                                style={{
+                                    width: 28,
+                                    height: 28,
+                                    borderRadius: 8,
+                                    background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: 13,
+                                    fontWeight: 900,
+                                    color: '#fff',
+                                }}
+                            >
+                                K
+                            </div>
+                            <span style={{ fontWeight: 800, fontSize: 16 }}>
+                                <span style={{ color: 'var(--text-primary)' }}>Kod</span>
+                                <span style={{ color: 'var(--accent-blue-light)' }}>Bank</span>
+                            </span>
                         </div>
 
+                        {/* Badge */}
                         <div
                             style={{
-                                background: 'var(--glass-bg)',
-                                border: '1px solid var(--glass-border)',
-                                borderRadius: 8,
-                                padding: '8px 12px',
-                                color: 'var(--text-secondary)',
+                                background: 'rgba(16, 185, 129, 0.08)',
+                                border: '1px solid rgba(16, 185, 129, 0.2)',
+                                borderRadius: 10,
+                                padding: '10px 14px',
+                                color: 'var(--accent-emerald-light)',
                                 fontSize: 12,
+                                fontWeight: 600,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 6,
                             }}
                         >
-                            🔒 Secure Banking
+                            <div className="status-dot" />
+                            Secure Banking
                         </div>
                     </div>
 
-                    {/* MIDDLE SECTION */}
+                    {/* MIDDLE SECTION — Form */}
                     <form
                         onSubmit={handleSubmit}
                         style={{
@@ -110,7 +134,7 @@ export default function Login() {
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
-                            gap: 16,
+                            gap: 18,
                         }}
                     >
                         <div>
@@ -138,16 +162,9 @@ export default function Login() {
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
                                     style={{
-                                        position: 'absolute',
-                                        right: 14,
-                                        top: '50%',
-                                        transform: 'translateY(-50%)',
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        color: 'var(--text-muted)',
-                                        fontSize: 16,
-                                        transition: 'color 0.3s ease',
+                                        position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)',
+                                        background: 'none', border: 'none', cursor: 'pointer',
+                                        color: 'var(--text-muted)', fontSize: 16, transition: 'color 0.3s ease',
                                     }}
                                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
                                     onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-muted)')}
@@ -158,49 +175,58 @@ export default function Login() {
                         </div>
                     </form>
 
-                    {/* RIGHT SECTION */}
+                    {/* RIGHT SECTION — Sign In Button */}
                     <div
                         style={{
                             padding: '36px 20px',
-                            background: 'rgba(18,14,8,0.4)',
-                            borderRadius: '0 16px 16px 0',
+                            background: 'linear-gradient(180deg, rgba(59,130,246,0.06) 0%, rgba(139,92,246,0.04) 100%)',
+                            borderRadius: '0 20px 20px 0',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
                         }}
                     >
                         <button
-                            onClick={handleSubmit as any}
+                            onClick={() => handleSubmit()}
                             disabled={loading}
                             style={{
-                                height: 140,
+                                height: 150,
                                 width: '100%',
-                                background: 'linear-gradient(180deg, #6AAF45 0%, #A0522D 100%)',
-                                borderRadius: 12,
+                                background: 'linear-gradient(180deg, #3B82F6 0%, #8B5CF6 50%, #6D28D9 100%)',
+                                borderRadius: 16,
                                 border: 'none',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: 8,
+                                gap: 10,
                                 cursor: 'pointer',
                                 transition: 'all 0.3s ease',
+                                boxShadow: '0 8px 24px rgba(59, 130, 246, 0.3)',
+                                position: 'relative',
+                                overflow: 'hidden',
                             }}
                             onMouseEnter={e => {
-                                e.currentTarget.style.boxShadow = '0 0 20px rgba(106,175,69,0.3)';
-                                e.currentTarget.style.transform = 'scale(1.02)';
+                                e.currentTarget.style.boxShadow = '0 12px 32px rgba(59, 130, 246, 0.45)';
+                                e.currentTarget.style.transform = 'scale(1.03)';
                             }}
                             onMouseLeave={e => {
-                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.boxShadow = '0 8px 24px rgba(59, 130, 246, 0.3)';
                                 e.currentTarget.style.transform = 'scale(1)';
                             }}
                         >
+                            {/* Shine overlay */}
+                            <div style={{
+                                position: 'absolute', inset: 0,
+                                background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%)',
+                                pointerEvents: 'none',
+                            }} />
                             {loading ? (
                                 <div className="spinner" />
                             ) : (
                                 <>
-                                    <span style={{ color: '#FFFFFF', fontWeight: 600, fontSize: 15 }}>Sign In</span>
-                                    <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}>→</span>
+                                    <span style={{ color: '#FFFFFF', fontWeight: 700, fontSize: 16, position: 'relative' }}>Sign In</span>
+                                    <span style={{ color: 'rgba(255,255,255,0.5)', fontSize: 20, position: 'relative' }}>→</span>
                                 </>
                             )}
                         </button>
@@ -208,9 +234,9 @@ export default function Login() {
                 </div>
 
                 {/* Below card */}
-                <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14, marginTop: 20 }}>
+                <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14, marginTop: 24 }}>
                     Don't have an account?{' '}
-                    <Link to="/register" style={{ color: 'var(--accent-green)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link to="/register" style={{ color: 'var(--accent-blue-light)', textDecoration: 'none', fontWeight: 600 }}>
                         Register Now
                     </Link>
                 </p>
